@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  microps:
+    build:
+      context: .
+    cap_add:
+      - NET_ADMIN
+    working_dir: /microps
+    command: ./docker-entrypoint.sh
+    privileged: true
+    container_name: microps
+    volumes:
+      - type: bind
+        source: .
+        target: /microps
