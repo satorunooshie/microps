@@ -115,6 +115,11 @@ int net_run(void)
 {
     struct net_device *dev;
 
+    // start interrupt handling.
+    if (intr_run() == -1) {
+        errorf("intr_run() failed");
+        return (-1);
+    }
     debugf("open all devices...");
     for (dev = devices; dev; dev = dev->next) {
         if (net_device_open(dev) == -1) {
@@ -129,6 +134,7 @@ void net_shutdown(void)
 {
     struct net_device *dev;
 
+    intr_shutdown();
     debugf("close all devices...");
     for (dev = devices; dev; dev = dev->next) {
         if (net_device_close(dev) == -1) {
@@ -140,6 +146,10 @@ void net_shutdown(void)
 
 int net_init(void)
 {
+    if (intr_init() == -1) {
+        errorf("intr_init() failed");
+        return (-1);
+    }
     infof("initialized");
     return (0);
 }
